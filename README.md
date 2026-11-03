@@ -58,3 +58,4 @@ Quantums do RR: 2, 5, 10, 20 e 50.
 - O SJF usa o tamanho real do burst; num SO de verdade isso teria que ser estimado.
 - Não tem fila de disco, então E/S e faults acontecem todos em paralelo.
 - Troca de contexto com custo fixo, sem considerar cache.
+- O log vai só até t=200, porque a versão completa passa de 400 MB.
