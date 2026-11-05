@@ -1,9 +1,9 @@
-﻿#Simulador de escalonamento - Trabalho Sistemas Operacionais
+﻿# Simulador de escalonamento - Trabalho Sistemas Operacionais
 
 Simulador de FCFS, SJF não preemptivo e Round Robin com 1 ou 4 CPUs, fila de prontos
 única, E/S, custo de troca de contexto e memória paginada com substituição FIFO ou LRU.
 
-##Compilar e rodar
+## Compilar e rodar
 
 ```bash
 make
@@ -20,7 +20,7 @@ grava também `log.txt` com os eventos, a fila de prontos, os bloqueados, as CPU
 ocupados a cada instante em que algo muda (até t=200, porque o log inteiro de 1000 processos
 passa de 400 MB). O speedup é calculado rodando a mesma carga com a outra quantidade de CPUs.
 
-##Experimentos
+## Experimentos
 
 ```bash
 bash scripts/experimentos.sh #roda as 28 execuções base em LRU e as mesmas 28 com FIFO
@@ -30,7 +30,7 @@ python3 scripts/graficos.py #tabela_resumo.csv e gráficos em resultados/figuras
 
 Quantums do RR: 2, 5, 10, 20 e 50.
 
-##Exemplos do enunciado (para conferir)
+## Exemplos do enunciado (para conferir)
 
 ```bash
 ./simulador --arquivo testes/ex71_sem_memoria.json # espera média 4.67, makespan 13
@@ -40,7 +40,7 @@ Quantums do RR: 2, 5, 10, 20 e 50.
 ./simulador --arquivo testes/ex55_processo17.json --custo-troca 0 # turnaround 99, 4 faults
 ```
 
-##Arquivos
+## Arquivos
 
 - `src/processo.hpp`: struct do processo e leitura do JSON
 - `src/escalonador.hpp`, `fcfs.hpp`, `sjf.hpp`, `rr.hpp`: os escalonadores
@@ -48,13 +48,13 @@ Quantums do RR: 2, 5, 10, 20 e 50.
 - `src/simulador.hpp`: o laço da simulação
 - `src/main.cpp`: argumentos e resumo
 
-##Decisões que tomamos
+## Decisões que tomamos
 - A troca de contexto é cobrada quando a CPU recebe um processo diferente do último que ela executou.
 - No page fault, o quadro é reservado na hora e a página fica protegida até o processo usar ela.
 - Se todos os quadros estão protegidos, o processo espera 20 e tenta de novo; se conseguir, espera mais 20 pra página chegar. O fault conta uma vez só.
 - Quando duas CPUs estouram o quantum ao mesmo tempo, a de menor índice é tratada primeiro.
 
-##Limitações
+## Limitações
 - O SJF usa o tamanho real do burst; num SO de verdade isso teria que ser estimado.
 - Não tem fila de disco, então E/S e faults acontecem todos em paralelo.
 - Troca de contexto com custo fixo, sem considerar cache.

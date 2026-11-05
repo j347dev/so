@@ -1,3 +1,4 @@
 simulador
 log*.txt
 __pycache__/
+gantt.csv
