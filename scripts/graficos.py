@@ -1,5 +1,5 @@
-# le as saidas em resultados/*.txt e gera a tabela resumo e os graficos
-# precisa de: pip install matplotlib
+#le as saidas em resultados/*.txt e gera a tabela resumo e os graficos
+#precisa de: pip install matplotlib
 import glob, os, re
 import matplotlib
 matplotlib.use("Agg")
@@ -10,7 +10,7 @@ os.makedirs("resultados/figuras", exist_ok=True)
 def numero(texto, nome):
     return float(re.search(nome + r":\s+([\d.]+)", texto).group(1))
 
-# carrega todas as execucoes
+#carrega todas as execucoes
 dados = []
 for arq in glob.glob("resultados/*.txt"):
     cen, sched, cpus, subst = re.match(r"(cenario_[AB]_\w+?)_(\w+?)_(\d)cpu_(\w+)\.txt", os.path.basename(arq)).groups()
@@ -33,7 +33,7 @@ def pega(cen, cpus, subst="lru"):
 
 cenarios = ["cenario_A_t0", "cenario_B_espacadas"]
 
-# tabela resumo (LRU, 256 quadros), uma por cenario
+#tabela resumo (LRU, 256 quadros), uma por cenario
 with open("resultados/tabela_resumo.csv", "w") as f:
     f.write("cenario,cpus,escalonador,espera_media,espera_max,turnaround,resposta,makespan,speedup,eficiencia,trocas,page_faults,taxa_faults\n")
     for cen in cenarios:
@@ -42,7 +42,7 @@ with open("resultados/tabela_resumo.csv", "w") as f:
                 f.write(f"{cen},{cpus},{nome(x['sched'])},{x['espera']},{x['espera_max']:.0f},{x['turnaround']},{x['resposta']},"
                         f"{x['makespan']:.0f},{x['speedup']},{x['eficiencia']},{x['trocas']:.0f},{x['faults']:.0f},{x['taxa']}\n")
 
-# grafico de barras: uma metrica por escalonador, 1 x 4 CPUs
+#grafico de barras: uma metrica por escalonador, 1 x 4 CPUs
 def barras(metrica, titulo, arquivo):
     fig, eixos = plt.subplots(1, 2, figsize=(12, 4))
     for ax, cen in zip(eixos, cenarios):
@@ -60,7 +60,7 @@ def barras(metrica, titulo, arquivo):
 barras("espera", "Espera media por escalonador (LRU, 256 quadros)", "espera_media.png")
 barras("turnaround", "Turnaround medio por escalonador", "turnaround.png")
 
-# speedup (so precisa das execucoes com 4 CPUs)
+#speedup (so precisa das execucoes com 4 CPUs)
 fig, ax = plt.subplots(figsize=(9, 4))
 for i, cen in enumerate(cenarios):
     d = pega(cen, 4)
@@ -73,7 +73,7 @@ ax.legend()
 fig.tight_layout()
 fig.savefig("resultados/figuras/speedup.png", dpi=150)
 
-# efeito do quantum no RR: espera, resposta e trocas
+#efeito do quantum no RR: espera, resposta e trocas
 qs = [2, 5, 10, 20, 50]
 fig, eixos = plt.subplots(1, 3, figsize=(15, 4))
 for ax, (metrica, titulo) in zip(eixos, [("espera", "Espera media"), ("resposta", "Resposta media"), ("trocas", "Trocas de contexto")]):
@@ -88,7 +88,7 @@ fig.suptitle("Efeito do quantum no RR")
 fig.tight_layout()
 fig.savefig("resultados/figuras/quantum_rr.png", dpi=150)
 
-# FIFO x LRU: page faults
+#FIFO x LRU: page faults
 fig, eixos = plt.subplots(1, 2, figsize=(13, 4))
 for ax, cen in zip(eixos, cenarios):
     rotulos = [f"{nome(s)}/{c}" for c in [1, 4] for s in ordem]

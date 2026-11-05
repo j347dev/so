@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
     }
     if (cfg.sched != "fcfs" && cfg.sched != "sjf" && cfg.sched != "rr") { std::cout << "--sched deve ser fcfs, sjf ou rr\n"; return 1; }
     if (cfg.subst != "fifo" && cfg.subst != "lru") { std::cout << "--subst deve ser fifo ou lru\n"; return 1; }
-    if (cfg.cpus < 1) { std::cout << "--cpus deve ser pelo menos 1\n"; return 1; }
+    if (cfg.cpus < 1 || cfg.cpus > 4) { std::cout << "--cpus deve ser de 1 a 4\n"; return 1; }
 
     std::vector<Processo> procs;
     try {

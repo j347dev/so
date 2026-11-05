@@ -30,7 +30,7 @@ python3 scripts/graficos.py #tabela_resumo.csv e gráficos em resultados/figuras
 
 Quantums do RR: 2, 5, 10, 20 e 50.
 
-## Exemplos do enunciado (para conferir)
+## Exemplos do enunciado
 
 ```bash
 ./simulador --arquivo testes/ex71_sem_memoria.json # espera média 4.67, makespan 13
