@@ -1,5 +1,5 @@
-// main.cpp - le os argumentos, roda a simulacao e mostra o resumo
-// exemplo: ./simulador --arquivo cenarios/cenario_A_t0.json --cpus 4 --sched rr --quantum 10 --subst lru
+//main.cpp - roda a simulacao e mostra o resumo (argumentos estão no README.md)
+//exemplo: ./simulador --arquivo cenarios/cenario_A_t0.json --cpus 4 --sched rr --quantum 10 --subst lru
 #include <cstdio>
 #include <fstream>
 #include <iostream>
@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
     Simulador sim(cfg, procs);
     Resultado r = sim.executar();
 
-    // speedup: roda a mesma carga com a outra quantidade de CPUs (1 <-> 4)
+    //roda a mesma carga com a outra quantidade de CPUs (1 a 4)
     Config outra = cfg;
     outra.cpus = (cfg.cpus == 1) ? 4 : 1;
     outra.log = false;
@@ -52,12 +52,12 @@ int main(int argc, char** argv) {
     int m4 = (cfg.cpus == 1) ? r2.makespan : r.makespan;
     double speedup = (double)m1 / m4;
 
-    printf("--- Parametros ---\n");
+    printf("PARAMETROS\n");
     printf("arquivo: %s | cpus: %d | sched: %s", cfg.arquivo.c_str(), cfg.cpus, cfg.sched.c_str());
     if (cfg.sched == "rr") printf(" | quantum: %d", cfg.quantum);
     printf("\nsubst: %s | quadros: %d | custo troca: %d\n", cfg.subst.c_str(), cfg.quadros, cfg.custoTroca);
 
-    printf("\n--- Metricas ---\n");
+    printf("\nMETRICAS\n");
     printf("Espera media:      %.2f\n", r.esperaMedia);
     printf("Espera maxima:     %lld\n", r.esperaMax);
     printf("Turnaround medio:  %.2f\n", r.turnaroundMedio);
@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
     printf("Eficiencia:        %.3f\n", speedup / 4);
     printf("Trocas de contexto: %lld\n", r.trocasTotal);
 
-    printf("\n--- Por CPU ---\n");
+    printf("\nPOR CPU\n");
     for (size_t c = 0; c < r.cpu.size(); c++) {
         EstatCPU& s = r.cpu[c];
         double M = r.makespan;
@@ -76,11 +76,11 @@ int main(int argc, char** argv) {
                100 * (s.util + s.troca) / M);
     }
 
-    printf("\n--- Memoria ---\n");
+    printf("\nMEMORIA\n");
     printf("Page faults:    %lld\n", r.faults);
     printf("Taxa de faults: %.2f%%\n", 100.0 * r.faults / r.referencias);
 
-    // gantt de 0 a 200
+    //gantt de 0 a 200
     std::ofstream g("gantt.csv");
     g << "cpu,inicio,fim,evento\n";
     for (auto& s : r.gantt) g << s.cpu << "," << s.ini << "," << s.fim << "," << s.evento << "\n";

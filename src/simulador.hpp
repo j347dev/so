@@ -1,10 +1,8 @@
-// simulador.hpp
-// Simulacao em tempo discreto. A cada instante t:
-//   1) termina o que aconteceu em [t-1, t): fim da troca, unidade executada,
-//      fim de burst (vai pra E/S ou termina), fim do quantum
-//   2) chegadas e retornos de E/S / page fault entram na fila (ordem de pid)
-//   3) quem estourou o quantum vai pro fim da fila
-//   4) despacho (CPU de menor indice primeiro) e execucao da unidade [t, t+1)
+//simulador.hpp
+//a cada instante t: termina o que aconteceu em (t-1, t): fim da troca, unidade executada,
+//fim de burst (vai pra E/S ou termina), fim do quantum. chegadas e retornos de E/S / page fault entram na fila (ordem de pid).
+//quem estourou o quantum vai pro fim da fila.
+//CPU de menor indice primeiro e execucao da unidade (t, t+1)
 #pragma once
 #include <fstream>
 #include <map>
@@ -13,14 +11,16 @@
 #include <string>
 #include <tuple>
 #include <vector>
-#include "escalonador.hpp"
+
+//include das bibliotecas
+#include "escalonador.hpp" 
 #include "fcfs.hpp"
 #include "memoria.hpp"
 #include "processo.hpp"
 #include "rr.hpp"
 #include "sjf.hpp"
 
-const int FIM_GANTT = 200;   // janela do Gantt e do log
+const int FIM_GANTT = 200;   //janela do Gantt e do log
 
 struct Config {
     std::string arquivo;
@@ -48,9 +48,9 @@ struct Resultado {
 };
 
 class Simulador {
-    // tipos de evento
+    //os tipos de evento dos processos
     enum { CHEGADA, RETORNO_ES, RETORNO_FAULT, TENTA_DE_NOVO };
-    // estados da CPU
+    //estados da CPU
     enum { LIVRE, TROCA, COM_PROC, EXEC };
 
     struct CPU {
@@ -69,12 +69,11 @@ class Simulador {
     Memoria mem;
     std::vector<CPU> cpus;
 
-    // eventos futuros: (instante, pid, tipo, indice no vetor)
-    // a fila de prioridade ja deixa ordenado por instante e depois por pid
+    //a fila de prioridade ja deixa ordenado por instante e depois por pid
     std::priority_queue<std::tuple<int, int, int, int>,
                         std::vector<std::tuple<int, int, int, int>>,
                         std::greater<std::tuple<int, int, int, int>>> eventos;
-    std::map<int, std::pair<int, std::string>> bloqueados;  // so pro log
+    std::map<int, std::pair<int, std::string>> bloqueados;
     long long seq = 0;
     int terminados = 0;
     Resultado res;
@@ -89,7 +88,7 @@ class Simulador {
     void gantt(int c, int ini, int fim, const std::string& e) {
         if (ini >= FIM_GANTT) return;
         if (fim > FIM_GANTT) fim = FIM_GANTT;
-        // se for continuacao do ultimo pedaco dessa CPU, so estende
+        //se for continuacao do ultimo pedaco dessa CPU, so estende
         for (int i = (int)res.gantt.size() - 1; i >= 0; i--) {
             if (res.gantt[i].cpu != c) continue;
             if (res.gantt[i].fim == ini && res.gantt[i].evento == e) {
@@ -116,7 +115,6 @@ class Simulador {
         if (mem.carregar(*p, p->proximaRef())) {
             bloquear(p, t + cfg.custoFault, RETORNO_FAULT, "fault");
         } else {
-            // todos os quadros protegidos: espera e tenta de novo
             bloquear(p, t + cfg.custoFault, TENTA_DE_NOVO, "sem vitima");
             ev(t, "SEM VITIMA P" + std::to_string(p->pid));
         }
@@ -182,8 +180,8 @@ public:
                             terminados++;
                             ev(t, "TERMINO P" + std::to_string(p->pid));
                         } else {
-                            int es = p->bursts[p->burstAtual].duracao;  // o proximo eh E/S
-                            p->burstAtual++;                             // e depois dele CPU de novo
+                            int es = p->bursts[p->burstAtual].duracao;
+                            p->burstAtual++;
                             bloquear(p, t + es, RETORNO_ES, "E/S");
                             ev(t, "FIM BURST P" + std::to_string(p->pid) + " (E/S ate " + std::to_string(t + es) + ")");
                         }
@@ -194,7 +192,7 @@ public:
             }
             if (terminados == n) break;
 
-            // 2) chegadas e retornos
+            //chegadas e retornos
             while (!eventos.empty() && std::get<0>(eventos.top()) == t) {
                 auto [te, pid, tipo, idx] = eventos.top();
                 eventos.pop();
@@ -210,7 +208,7 @@ public:
                 else ev(t, "RETORNO FAULT P" + std::to_string(pid));
             }
 
-            // 3) fim do quantum
+            //fim do quantum
             for (size_t c = 0; c < cpus.size(); c++) {
                 CPU& k = cpus[c];
                 if (!k.estourou) continue;
@@ -221,11 +219,11 @@ public:
                     k.p = nullptr;
                     k.estado = LIVRE;
                 } else {
-                    k.quantumUsado = 0;  // ninguem esperando, continua com quantum novo
+                    k.quantumUsado = 0;
                 }
             }
 
-            // 4) despacho e execucao
+            //despacho e execucao
             for (size_t c = 0; c < cpus.size(); c++) {
                 CPU& k = cpus[c];
                 while (true) {
@@ -258,7 +256,7 @@ public:
                         k.estado = EXEC;
                         break;
                     }
-                    // page fault: nao gasta a unidade e a CPU ja fica livre
+                    //page fault
                     res.faults++;
                     ev(t, "FAULT P" + std::to_string(p->pid) + " pag " + std::to_string(pag));
                     k.p = nullptr;
@@ -269,7 +267,7 @@ public:
 
             if (cfg.log) escreverLog(t);
 
-            // se nao tem nada pra fazer, pula direto pro proximo evento
+            //se nao tem nada pra fazer, pula pro proximo evento
             bool parado = esc->vazia();
             for (auto& k : cpus) if (k.estado != LIVRE) parado = false;
             int prox = t + 1;
@@ -290,7 +288,7 @@ public:
             t = prox;
         }
 
-        // metricas
+        //metricas
         res.makespan = t;
         double somaEspera = 0, somaTat = 0, somaResp = 0;
         for (auto& p : procs) {

@@ -1,7 +1,7 @@
-// fcfs.hpp - First Come, First Served
-// Atende na ordem de entrada na fila de prontos. Fila simples (deque): O(1).
+//fcfs.hpp
+//atende na ordem de entrada na fila de prontos.
 #pragma once
-#include <deque>
+#include <deque> //biblioteca double-ended queue, que pode adicionar no começo e no fim
 #include "escalonador.hpp"
 
 class FCFS : public Escalonador {

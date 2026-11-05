@@ -1,9 +1,11 @@
-// rr.hpp - Round Robin
-// Mesma fila circular do FCFS; a diferenca e o quantum, que o simulador usa
-// para preemptar o processo (que volta para o fim da fila).
+//rr.hpp
+//quantum para preemptar o processo
 #pragma once
 #include "fcfs.hpp"
 
+//using namespace std; 
+
+//vai herdar tudo de FCFS, e FCFS herdou de escalonador.hpp, a diferença vai ser no quantum
 class RR : public FCFS {
     int q;
 public:
