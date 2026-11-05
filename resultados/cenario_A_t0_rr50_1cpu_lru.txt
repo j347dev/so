@@ -1,8 +1,8 @@
---- Parametros ---
+PARAMETROS
 arquivo: cenarios/cenario_A_t0.json | cpus: 1 | sched: rr | quantum: 50
 subst: lru | quadros: 256 | custo troca: 1
 
---- Metricas ---
+METRICAS
 Espera media:      11644.97
 Espera maxima:     62412
 Turnaround medio:  25348.41
@@ -12,10 +12,10 @@ Speedup:           3.956 (M1=69208, M4=17496)
 Eficiencia:        0.989
 Trocas de contexto: 25031
 
---- Por CPU ---
+POR CPU
 CPU 0: util 44137 (63.8%) | troca 25031 (36.2%) | ocioso 40 (0.1%) | trocas 25031 | utilizacao 99.9%
 
---- Memoria ---
+MEMORIA
 Page faults:    22063
 Taxa de faults: 49.99%
 

@@ -1,8 +1,8 @@
---- Parametros ---
+PARAMETROS
 arquivo: cenarios/cenario_B_espacadas.json | cpus: 4 | sched: rr | quantum: 5
 subst: lru | quadros: 256 | custo troca: 1
 
---- Metricas ---
+METRICAS
 Espera media:      420.82
 Espera maxima:     6505
 Turnaround medio:  688.92
@@ -12,13 +12,13 @@ Speedup:           4.646 (M1=71730, M4=15438)
 Eficiencia:        1.162
 Trocas de contexto: 16411
 
---- Por CPU ---
+POR CPU
 CPU 0: util 11299 (73.2%) | troca 4102 (26.6%) | ocioso 37 (0.2%) | trocas 4102 | utilizacao 99.8%
 CPU 1: util 10968 (71.0%) | troca 4137 (26.8%) | ocioso 333 (2.2%) | trocas 4137 | utilizacao 97.8%
 CPU 2: util 10886 (70.5%) | troca 4148 (26.9%) | ocioso 404 (2.6%) | trocas 4148 | utilizacao 97.4%
 CPU 3: util 10984 (71.1%) | troca 4024 (26.1%) | ocioso 430 (2.8%) | trocas 4024 | utilizacao 97.2%
 
---- Memoria ---
+MEMORIA
 Page faults:    8659
 Taxa de faults: 19.62%
 
