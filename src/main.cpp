@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
     }
     if (cfg.sched != "fcfs" && cfg.sched != "sjf" && cfg.sched != "rr") { std::cout << "--sched deve ser fcfs, sjf ou rr\n"; return 1; }
     if (cfg.subst != "fifo" && cfg.subst != "lru") { std::cout << "--subst deve ser fifo ou lru\n"; return 1; }
+    if (cfg.cpus < 1) { std::cout << "--cpus deve ser pelo menos 1\n"; return 1; }
 
     std::vector<Processo> procs;
     try {
@@ -57,14 +58,15 @@ int main(int argc, char** argv) {
     if (cfg.sched == "rr") printf(" | quantum: %d", cfg.quantum);
     printf("\nsubst: %s | quadros: %d | custo troca: %d\n", cfg.subst.c_str(), cfg.quadros, cfg.custoTroca);
 
+    int nc = (cfg.cpus == 1) ? 4 : cfg.cpus; //numero de CPUs na comparacao
     printf("\nMETRICAS\n");
     printf("Espera media:      %.2f\n", r.esperaMedia);
     printf("Espera maxima:     %lld\n", r.esperaMax);
     printf("Turnaround medio:  %.2f\n", r.turnaroundMedio);
     printf("Resposta media:    %.2f\n", r.respostaMedia);
     printf("Makespan:          %d\n", r.makespan);
-    printf("Speedup:           %.3f (M1=%d, M4=%d)\n", speedup, m1, m4);
-    printf("Eficiencia:        %.3f\n", speedup / 4);
+    printf("Speedup:           %.3f (M1=%d, M%d=%d)\n", speedup, m1, nc, m4);
+    printf("Eficiencia:        %.3f\n", speedup / nc);
     printf("Trocas de contexto: %lld\n", r.trocasTotal);
 
     printf("\nPOR CPU\n");
